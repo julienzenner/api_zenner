@@ -1,0 +1,134 @@
+server:
+  port: 8092
+  error:
+    include-message: always
+  forward-headers-strategy: framework
+management:
+  endpoint:
+    beans:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+spring:
+  application:
+    name: cours-service
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database: postgresql
+    show-sql: true
+  datasource:
+    initialization-mode: always
+    username: postgres
+    password: cours
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/cours
+  cloud:
+    consul:
+      discovery:
+        hostname: localhost
+        register-health-check: false
+    stream:
+      bindings:
+        episode-utilisateur:
+          destination: messages
+          group: utilisateur.episode
+          binder: rabbit
+          producer:
+            requiredGroups: ${spring.cloud.stream.bindings.episode-utilisateur.group}
+        new-cours:
+          destination: messages
+          group: cours.new
+          binder: rabbit
+        update-cours:
+          destination: messages
+          group: cours.update
+          binder: rabbit
+        patch-cours:
+          destination: messages
+          group: cours.patch
+          binder: rabbit
+        delete-cours:
+          destination: messages
+          group: cours.delete
+          binder: rabbit
+        new-episode:
+          destination: messages
+          group: episode.new
+          binder: rabbit
+        update-episode:
+          destination: messages
+          group: episode.update
+          binder: rabbit
+        patch-episode:
+          destination: messages
+          group: episode.patch
+          binder: rabbit
+        delete-episode:
+          destination: messages
+          group: episode.delete
+          binder: rabbit
+        new-episode-cours:
+          destination: messages
+          group: cours.new.episode
+          binder: rabbit
+          producer:
+            requiredGroups: ${spring.cloud.stream.bindings.new-episode-cours.group}
+      rabbit:
+        bindings:
+          episode-utilisateur:
+            producer:
+              routing-key-expression: "'messages.utilisateur.episode'"
+              bindingRoutingKey: messages.utilisateur.episode
+          new-cours:
+            consumer:
+              bindingRoutingKey: messages.cours.new
+          update-cours:
+            consumer:
+              bindingRoutingKey: messages.cours.update
+          patch-cours:
+            consumer:
+              bindingRoutingKey: messages.cours.patch
+          delete-cours:
+            consumer:
+              bindingRoutingKey: messages.cours.delete
+          new-episode:
+            consumer:
+              bindingRoutingKey: messages.episode.new
+          update-episode:
+            consumer:
+              bindingRoutingKey: messages.episode.update
+          patch-episode:
+            consumer:
+              bindingRoutingKey: messages.episode.patch
+          delete-episode:
+            consumer:
+              bindingRoutingKey: messages.episode.delete
+          new-episode-cours:
+            producer:
+              bindingRoutingKey: messages.cours.new.episode
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-value: ASDFASFsdfsdfsdfsfadsf234asdfasfdas
+hystrix:
+  shareSecurityContext: true
+---
+spring:
+  profiles: docker
+  datasource:
+    username: postgres
+    password: cours
+    url: jdbc:postgresql://postgres-cours:5432/cours
+  cloud:
+    consul:
+      host: consul
+      discovery:
+        hostname: cours-service
+        instance-id: ${spring.application.name}:instance_${random.value}
+        prefer-ip-address: true
+  rabbitmq:
+    host: rabbitmq

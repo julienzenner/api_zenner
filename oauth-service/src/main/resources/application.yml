@@ -1,0 +1,54 @@
+server:
+  port: 9010
+  error:
+    include-message: always
+management:
+  endpoint:
+    beans:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+spring:
+  application:
+    name: oauth-service
+  jpa:
+    show-sql: true
+    database: postgresql
+    hibernate:
+      ddl-auto: create
+  datasource:
+    url: jdbc:postgresql://localhost:5434/oauth
+    username: postgres
+    password: oauth
+    driver-class-name: org.postgresql.Driver
+    initialization-mode: always
+  cloud:
+    consul:
+      discovery:
+        hostname: localhost
+        register-health-check: false
+    stream:
+      bindings:
+        new-user:
+          destination: messages
+          group: user.new
+          binder: rabbit
+          consumer:
+            binding-routing-key: messages.user.new
+
+---
+spring:
+  profiles: docker
+  datasource:
+    username: postgres
+    password: oauth
+    url: jdbc:postgresql://postgres-oauth:5432/oauth
+  cloud:
+    consul:
+      host: consul
+      discovery:
+        hostname: oauth-service
+  rabbitmq:
+    host: rabbitmq

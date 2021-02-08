@@ -1,0 +1,23 @@
+server:
+  port: 9020
+spring:
+  application:
+    name: spring-boot-admin
+  cloud:
+    consul:
+      discovery:
+        hostname: localhost
+        register-health-check: false
+  boot:
+    admin:
+      discovery:
+        ignored-services: consul
+
+---
+spring:
+  profiles: docker
+  cloud:
+    consul:
+      host: consul
+      discovery:
+        hostname: spring-boot-admin

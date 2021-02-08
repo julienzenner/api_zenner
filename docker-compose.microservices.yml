@@ -1,0 +1,54 @@
+version: "3.9"
+services:
+  utilisateur-service:
+    build:
+      context: $PWD/utilisateur-service/
+    ports:
+      - ${UTILISATEUR_PORT}:8082
+    networks:
+      - api_zenner_${NETWORK_NAME}
+  cours-service:
+    build:
+      context: $PWD/cours-service/
+    ports:
+      - ${COURS_PORT}:8092
+    networks:
+      - api_zenner_${NETWORK_NAME}
+  gateway-service:
+    build:
+      context: $PWD/gateway-service/
+    ports:
+      - ${GATEWAY_PORT}:9000
+    networks:
+      - api_zenner_${NETWORK_NAME}
+  oauth-service:
+    build:
+      context: $PWD/oauth-service/
+    ports:
+      - ${OAUTH_PORT}:9010
+    networks:
+      - api_zenner_${NETWORK_NAME}
+  spring-boot-admin:
+    build:
+      context: $PWD/spring-boot-admin/
+    ports:
+      - ${SPRING_BOOT_ADMIN_PORT}:9020
+    networks:
+      - api_zenner_${NETWORK_NAME}
+  utilisateur-service-replica:
+    build:
+      context: $PWD/utilisateur-service/
+    ports:
+      - ${UTILISATEUR_REPLICA_PORT}:8082
+    networks:
+      - api_zenner_${NETWORK_NAME}
+  cours-service-replica:
+    build:
+      context: $PWD/cours-service/
+    ports:
+      - ${COURS_REPLICA_PORT}:8092
+    networks:
+      - api_zenner_${NETWORK_NAME}
+networks:
+  api_zenner_shared:
+    external: true

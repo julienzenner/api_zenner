@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../config-service/config-service.iml" filepath="$PROJECT_DIR$/../config-service/config-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../cours-service/cours-service.iml" filepath="$PROJECT_DIR$/../cours-service/cours-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gateway-service.iml" filepath="$PROJECT_DIR$/gateway-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../oauth-service/oauth-service.iml" filepath="$PROJECT_DIR$/../oauth-service/oauth-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../spring-boot-admin/spring-boot-admin.iml" filepath="$PROJECT_DIR$/../spring-boot-admin/spring-boot-admin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../utilisateur-service/utilisateur-service.iml" filepath="$PROJECT_DIR$/../utilisateur-service/utilisateur-service.iml" />
+    </modules>
+  </component>
+</project>

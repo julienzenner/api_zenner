@@ -1,0 +1,45 @@
+version: "3.9"
+services:
+  consul:
+    image: consul:${CONSUL_TAG}
+    ports:
+      - ${CONSUL_PORT}:8500
+    networks:
+      - shared
+  rabbitmq:
+    image: rabbitmq:${RABBITMQ_TAG}
+    ports:
+      - ${RABBITMQ_PORT}:5672
+      - ${RABBITMQ_UI_PORT}:15672
+    networks:
+      - shared
+  postgres-utilisateur:
+    image: postgres:${POSTGRES_TAG}
+    ports:
+      - ${POSTGRES_UTILISATEUR_PORT}:5432
+    environment:
+      - POSTGRES_PASSWORD=utilisateur
+      - POSTGRES_DB=utilisateur
+    networks:
+      - shared
+  postgres-cours:
+    image: postgres:${POSTGRES_TAG}
+    ports:
+      - ${POSTGRES_COURS_PORT}:5432
+    environment:
+      - POSTGRES_PASSWORD=cours
+      - POSTGRES_DB=cours
+    networks:
+      - shared
+  postgres-oauth:
+    image: postgres:${POSTGRES_TAG}
+    ports:
+      - ${POSTGRES_OAUTH_PORT}:5432
+    environment:
+      - POSTGRES_PASSWORD=oauth
+      - POSTGRES_DB=oauth
+    networks:
+      - ${NETWORK_NAME}
+networks:
+  shared:
+    driver: bridge

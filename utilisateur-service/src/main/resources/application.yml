@@ -1,0 +1,110 @@
+server:
+  port: 8082
+  error:
+    include-message: always
+management:
+  endpoint:
+    beans:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+spring:
+  application:
+    name: utilisateur-service
+  jpa:
+    show-sql: true
+    database: postgresql
+    hibernate:
+      ddl-auto: create
+  datasource:
+    url: jdbc:postgresql://localhost:5432/utilisateur
+    username: postgres
+    password: utilisateur
+    driver-class-name: org.postgresql.Driver
+    initialization-mode: always
+  cloud:
+    consul:
+      discovery:
+        hostname: localhost
+        register-health-check: false
+    stream:
+      bindings:
+        new-utilisateur:
+          destination: messages
+          group: utilisateur.new
+          binder: rabbit
+        register-utilisateur:
+          destination: messages
+          group: utilisateur.register
+          binder: rabbit
+        update-utilisateur:
+          destination: messages
+          group: utilisateur.update
+          binder: rabbit
+        episode-utilisateur:
+          destination: messages
+          group: utilisateur.episode
+          binder: rabbit
+        patch-utilisateur:
+          destination: messages
+          group: utilisateur.patch
+          binder: rabbit
+        delete-utilisateur:
+          destination: messages
+          group: utilisateur.delete
+          binder: rabbit
+        new-user:
+          destination: messages
+          group: user.new
+          binder: rabbit
+          producer:
+            requiredGroups: ${spring.cloud.stream.bindings.new-user.group}
+      rabbit:
+        bindings:
+          new-utilisateur:
+            consumer:
+              bindingRoutingKey: messages.utilisateur.new
+          register-utilisateur:
+            consumer:
+              bindingRoutingKey: messages.utilisateur.register
+          update-utilisateur:
+            consumer:
+              bindingRoutingKey: messages.utilisateur.update
+          episode-utilisateur:
+            consumer:
+              bindingRoutingKey: messages.utilisateur.episode
+          patch-utilisateur:
+            consumer:
+              bindingRoutingKey: messages.utilisateur.patch
+          delete-utilisateur:
+            consumer:
+              bindingRoutingKey: messages.utilisateur.delete
+          new-user:
+            producer:
+              routing-key-expression: messages.user.new
+              bindingRoutingKey: messages.user.new
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-value: ASDFASFsdfsdfsdfsfadsf234asdfasfdas
+hystrix:
+  shareSecurityContext: true
+---
+spring:
+  profiles: docker
+  datasource:
+    username: postgres
+    password: utilisateur
+    url: jdbc:postgresql://postgres-utilisateur:5432/utilisateur
+  cloud:
+    consul:
+      host: consul
+      discovery:
+        hostname: utilisateur-service
+        instance-id: ${spring.application.name}:instance_${random.value}
+        prefer-ip-address: true
+  rabbitmq:
+    host: rabbitmq

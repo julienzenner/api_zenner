@@ -1,0 +1,184 @@
+server:
+  port: 9000
+management:
+  endpoint:
+    beans:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-value: ASDFASFsdfsdfsdfsfadsf234asdfasfdas
+spring:
+  application:
+    name: gateway-service
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 1024MB
+      max-request-size: 1064MB
+  cloud:
+    consul:
+      discovery:
+        register-health-check: false
+        hostname: localhost
+    stream:
+      bindings:
+        new-utilisateur:
+          destination: messages
+          group: utilisateur.new
+          binder: rabbit
+          producer:
+            requiredGroups: ${spring.cloud.stream.bindings.new-utilisateur.group}
+        register-utilisateur:
+          destination: messages
+          group: utilisateur.register
+          binder: rabbit
+          producer:
+            requiredGroups: ${spring.cloud.stream.bindings.register-utilisateur.group}
+        delete-utilisateur:
+          destination: messages
+          group: utilisateur.delete
+          binder: rabbit
+          producer:
+            requiredGroups: ${spring.cloud.stream.bindings.delete-utilisateur.group}
+        update-utilisateur:
+          destination: messages
+          group: utilisateur.update
+          binder: rabbit
+          producer:
+            requiredGroups: ${spring.cloud.stream.bindings.update-utilisateur.group}
+        episode-utilisateur:
+          destination: messages
+          group: utilisateur.episode
+          binder: rabbit
+          producer:
+            requiredGroups: ${spring.cloud.stream.bindings.episode-utilisateur.group}
+        patch-utilisateur:
+          destination: messages
+          group: utilisateur.patch
+          binder: rabbit
+          producer:
+            requiredGroups: ${spring.cloud.stream.bindings.patch-utilisateur.group}
+        new-cours:
+          destination: messages
+          group: cours.new
+          binder: rabbit
+          producer:
+            requiredGroups: ${spring.cloud.stream.bindings.new-cours.group}
+        update-cours:
+          destination: messages
+          group: cours.update
+          binder: rabbit
+          producer:
+            requiredGroups: ${spring.cloud.stream.bindings.update-cours.group}
+        patch-cours:
+          destination: messages
+          group: cours.patch
+          binder: rabbit
+          producer:
+            requiredGroups: ${spring.cloud.stream.bindings.patch-cours.group}
+        delete-cours:
+          destination: messages
+          group: cours.delete
+          binder: rabbit
+          producer:
+            requiredGroups: ${spring.cloud.stream.bindings.delete-cours.group}
+        new-episode:
+          destination: messages
+          group: episode.new
+          binder: rabbit
+          producer:
+            requiredGroups: ${spring.cloud.stream.bindings.new-episode.group}
+        update-episode:
+          destination: messages
+          group: episode.update
+          binder: rabbit
+          producer:
+            requiredGroups: ${spring.cloud.stream.bindings.update-episode.group}
+        patch-episode:
+          destination: messages
+          group: episode.patch
+          binder: rabbit
+          producer:
+            requiredGroups: ${spring.cloud.stream.bindings.patch-episode.group}
+        delete-episode:
+          destination: messages
+          group: episode.delete
+          binder: rabbit
+          producer:
+            requiredGroups: ${spring.cloud.stream.bindings.delete-episode.group}
+      rabbit:
+        bindings:
+          new-utilisateur:
+            producer:
+              routing-key-expression: "'messages.utilisateur.new'"
+              bindingRoutingKey: messages.utilisateur.new
+          register-utilisateur:
+            producer:
+              routing-key-expression: "'messages.utilisateur.register'"
+              bindingRoutingKey: messages.utilisateur.register
+          delete-utilisateur:
+            producer:
+              routing-key-expression: "'messages.utilisateur.delete'"
+              bindingRoutingKey: messages.utilisateur.delete
+          update-utilisateur:
+            producer:
+              routing-key-expression: "'messages.utilisateur.update'"
+              bindingRoutingKey: messages.utilisateur.update
+          episode-utilisateur:
+            producer:
+              routing-key-expression: "'messages.utilisateur.episode'"
+              bindingRoutingKey: messages.utilisateur.episode
+          patch-utilisateur:
+            producer:
+              routing-key-expression: "'messages.utilisateur.patch'"
+              bindingRoutingKey: messages.utilisateur.patch
+          new-cours:
+            producer:
+              routing-key-expression: "'messages.cours.new'"
+              bindingRoutingKey: messages.cours.new
+          update-cours:
+            producer:
+              routing-key-expression: "'messages.cours.update'"
+              bindingRoutingKey: messages.cours.update
+          patch-cours:
+            producer:
+              routing-key-expression: "'messages.cours.patch'"
+              bindingRoutingKey: messages.cours.patch
+          delete-cours:
+            producer:
+              routing-key-expression: "'messages.cours.delete'"
+              bindingRoutingKey: messages.cours.delete
+          new-episode:
+            producer:
+              routing-key-expression: "'messages.episode.new'"
+              bindingRoutingKey: messages.episode.new
+          update-episode:
+            producer:
+              routing-key-expression: "'messages.episode.update'"
+              bindingRoutingKey: messages.episode.update
+          patch-episode:
+            producer:
+              routing-key-expression: "'messages.episode.patch'"
+              bindingRoutingKey: messages.episode.patch
+          delete-episode:
+            producer:
+              routing-key-expression: "'messages.episode.delete'"
+              bindingRoutingKey: messages.episode.delete
+hystrix:
+  shareSecurityContext: true
+---
+spring:
+  profiles: docker
+  cloud:
+    consul:
+      host: consul
+      discovery:
+        hostname: gateway-service
+  rabbitmq:
+    host: rabbitmq
